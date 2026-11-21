@@ -141,22 +141,8 @@ namespace HullBreachLauncher
                 try
                 {
                     ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;   // TLS 1.2
-                    var req = (HttpWebRequest)WebRequest.Create("https://api.github.com/repos/" + Repo + "/releases/latest");
-                    req.UserAgent = "HullBreachLauncher"; req.Accept = "application/vnd.github+json"; req.Timeout = 15000;
-                    string json;
-                    using (var resp = req.GetResponse())
-                    using (var sr = new StreamReader(resp.GetResponseStream())) json = sr.ReadToEnd();
-                    var ser = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
-                    var d = (Dictionary<string, object>)ser.DeserializeObject(json);
-                    _latestTag = Convert.ToString(d["tag_name"]);
-                    _notesText = d.ContainsKey("body") && d["body"] != null ? Convert.ToString(d["body"]) : "";
-                    _zipUrl = null;
-                    foreach (var a in (object[])d["assets"])
-                    {
-                        var ad = (Dictionary<string, object>)a;
-                        string name = Convert.ToString(ad["name"]);
-                        if (name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase)) { _zipUrl = Convert.ToString(ad["browser_download_url"]); break; }
-                    }
+                    try { FetchFromApi(); }
+                    catch { FetchWithoutApi(); }   // la API de GitHub limita a 60 consultas/hora por IP (error 403): se usa la vía sin límite
                     Ui(delegate
                     {
                         _notes.Text = (_notesText ?? "").Replace("\r\n", "\n").Replace("\n", "\r\n");
@@ -178,6 +164,52 @@ namespace HullBreachLauncher
                 }
             });
             t.IsBackground = true; t.Start();
+        }
+
+        void FetchFromApi()
+        {
+            var req = (HttpWebRequest)WebRequest.Create("https://api.github.com/repos/" + Repo + "/releases/latest");
+            req.UserAgent = "HullBreachLauncher"; req.Accept = "application/vnd.github+json"; req.Timeout = 15000;
+            string json;
+            using (var resp = req.GetResponse())
+            using (var sr = new StreamReader(resp.GetResponseStream())) json = sr.ReadToEnd();
+            var ser = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
+            var d = (Dictionary<string, object>)ser.DeserializeObject(json);
+            string tag = Convert.ToString(d["tag_name"]);
+            string notes = d.ContainsKey("body") && d["body"] != null ? Convert.ToString(d["body"]) : "";
+            string zipUrl = null;
+            foreach (var a in (object[])d["assets"])
+            {
+                var ad = (Dictionary<string, object>)a;
+                string name = Convert.ToString(ad["name"]);
+                if (name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase)) { zipUrl = Convert.ToString(ad["browser_download_url"]); break; }
+            }
+            _latestTag = tag; _notesText = notes; _zipUrl = zipUrl;
+        }
+
+        // Sin API: la página /releases/latest redirige a /releases/tag/<etiqueta>; el zip se llama HullBreach-X.Y.zip y las
+        // notas están en RELEASE_NOTES_X.Y.md del repositorio. Ninguna de estas direcciones cuenta para el límite de la API.
+        void FetchWithoutApi()
+        {
+            var req = (HttpWebRequest)WebRequest.Create("https://github.com/" + Repo + "/releases/latest");
+            req.UserAgent = "HullBreachLauncher"; req.AllowAutoRedirect = false; req.Method = "HEAD"; req.Timeout = 15000;
+            string loc;
+            using (var resp = (HttpWebResponse)req.GetResponse()) loc = resp.Headers["Location"];
+            if (string.IsNullOrEmpty(loc) || loc.IndexOf("/tag/", StringComparison.Ordinal) < 0) throw new Exception("no se pudo leer la última versión");
+            string tag = Uri.UnescapeDataString(loc.Substring(loc.LastIndexOf("/tag/", StringComparison.Ordinal) + 5)).Trim();
+            string ver = Norm(tag);
+            string notes = "";
+            try
+            {
+                using (var wc = new WebClient())
+                {
+                    wc.Headers[HttpRequestHeader.UserAgent] = "HullBreachLauncher"; wc.Encoding = System.Text.Encoding.UTF8;
+                    notes = wc.DownloadString("https://raw.githubusercontent.com/" + Repo + "/main/RELEASE_NOTES_" + ver + ".md");
+                }
+            }
+            catch { }
+            _latestTag = tag; _notesText = notes;
+            _zipUrl = "https://github.com/" + Repo + "/releases/download/" + tag + "/HullBreach-" + ver + ".zip";
         }
 
         void ShowVersions()
