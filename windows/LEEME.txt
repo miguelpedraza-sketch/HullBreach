@@ -1,0 +1,7 @@
+Hull Breach - Instalador para Windows
+=====================================
+1. Deja Instalar-HullBreach.bat e Instalar-HullBreach.ps1 juntos en la misma carpeta.
+2. Doble clic en Instalar-HullBreach.bat.
+   Descarga la ultima version (release "Latest" de GitHub), la instala en la carpeta "Game" de al lado y abre el juego.
+   Si ya tienes la ultima, solo abre el juego.
+Opciones (desde consola): Instalar-HullBreach.bat -SinJugar   (instala sin abrir el juego)

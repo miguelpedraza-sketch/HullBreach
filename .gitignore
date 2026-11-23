@@ -1,3 +1,5 @@
-*.zip
 Game/
 Game.tmp/
+Game-linux/
+Game-linux.tmp/
+*.zip

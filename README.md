@@ -6,18 +6,18 @@ Juego de arena con vehículos armados (Unity). Este repositorio contiene el **la
 1. Descarga `HullBreachLauncher.exe` desde la última Release (o de la carpeta `launcher/`).
 2. Ábrelo: pulsa **INSTALAR/ACTUALIZAR** y luego **PLAY**. PLAY solo se habilita con la última versión instalada.
 
-## Instalación rápida (sin launcher)
-Descarga `Instalar-HullBreach.bat` y `Instalar-HullBreach.ps1` (en la misma carpeta) y haz doble clic en el `.bat`: descarga la última versión, la instala en `Game/` y abre el juego. Si ya la tienes, solo la abre. No usa la API de GitHub, así que no se bloquea por el límite de consultas.
+## Instalación rápida (sin launcher) — Windows (carpeta `windows/`)
+Descarga `windows/Instalar-HullBreach.bat` y `windows/Instalar-HullBreach.ps1` (en la misma carpeta) y haz doble clic en el `.bat`: descarga la última versión, la instala en `Game/` y abre el juego. Si ya la tienes, solo la abre. No usa la API de GitHub, así que no se bloquea por el límite de consultas.
 
 Descarga directa del zip: `https://github.com/miguelpedraza-sketch/HullBreach/releases/latest` (archivo `HullBreach-X.Y.zip`).
 
-## Linux (x86_64)
-Descarga `hullbreach-launcher.sh`, dale permisos y ejecútalo:
+## Linux x86_64 (carpeta `linux/`)
+Descarga `linux/instalar-hullbreach.sh`, dale permisos y ejecútalo:
 ```
-chmod +x hullbreach-launcher.sh
-./hullbreach-launcher.sh          # instala/actualiza y juega
-./hullbreach-launcher.sh --check  # solo comprueba si hay versión nueva
-./hullbreach-launcher.sh --force  # reinstala
+chmod +x instalar-hullbreach.sh
+./instalar-hullbreach.sh          # instala/actualiza y juega
+./instalar-hullbreach.sh --check  # solo comprueba si hay versión nueva
+./instalar-hullbreach.sh --force  # reinstala
 ```
 Instala en `Game-linux/`. Necesita `curl` o `wget` y `unzip` (o `python3`). La versión de Linux se publica en la release fija `linux-latest` (archivos `HullBreach-linux.zip` y `version.txt`), así que no afecta al instalador de Windows.
 

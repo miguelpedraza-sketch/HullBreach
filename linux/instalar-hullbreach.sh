@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Launcher de Hull Breach para Linux (x86_64).
+# Instalador de Hull Breach para Linux (x86_64).
 # Instala o actualiza el juego a la última versión publicada para Linux y lo ejecuta.
 # No usa la API de GitHub (sin límite de consultas): descarga ficheros de una Release fija.
 #
-# Uso:   ./hullbreach-launcher.sh            instala/actualiza y juega
-#        ./hullbreach-launcher.sh --no-play  solo instala/actualiza
-#        ./hullbreach-launcher.sh --check    solo dice si hay versión nueva
-#        ./hullbreach-launcher.sh --force    reinstala aunque ya sea la última
+# Uso:   ./instalar-hullbreach.sh            instala/actualiza y juega
+#        ./instalar-hullbreach.sh --no-play  solo instala/actualiza
+#        ./instalar-hullbreach.sh --check    solo dice si hay versión nueva
+#        ./instalar-hullbreach.sh --force    reinstala aunque ya sea la última
 set -u
 
 REPO="miguelpedraza-sketch/HullBreach"

@@ -1,0 +1,10 @@
+Hull Breach - Instalador para Linux (x86_64)
+============================================
+  chmod +x instalar-hullbreach.sh
+  ./instalar-hullbreach.sh            instala/actualiza y juega
+  ./instalar-hullbreach.sh --no-play  solo instala/actualiza
+  ./instalar-hullbreach.sh --check    solo dice si hay version nueva
+  ./instalar-hullbreach.sh --force    reinstala
+
+Instala en la carpeta "Game-linux" de al lado. Necesita curl o wget, y unzip (o python3).
+Descarga de la release fija "linux-latest" (HullBreach-linux.zip + version.txt).
