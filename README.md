@@ -11,9 +11,23 @@ Descarga `Instalar-HullBreach.bat` y `Instalar-HullBreach.ps1` (en la misma carp
 
 Descarga directa del zip: `https://github.com/miguelpedraza-sketch/HullBreach/releases/latest` (archivo `HullBreach-X.Y.zip`).
 
+## Linux (x86_64)
+Descarga `hullbreach-launcher.sh`, dale permisos y ejecútalo:
+```
+chmod +x hullbreach-launcher.sh
+./hullbreach-launcher.sh          # instala/actualiza y juega
+./hullbreach-launcher.sh --check  # solo comprueba si hay versión nueva
+./hullbreach-launcher.sh --force  # reinstala
+```
+Instala en `Game-linux/`. Necesita `curl` o `wget` y `unzip` (o `python3`). La versión de Linux se publica en la release fija `linux-latest` (archivos `HullBreach-linux.zip` y `version.txt`), así que no afecta al instalador de Windows.
+
 ## Publicar una versión nueva
 1. Compilar el juego como `HullBreach.exe` y comprimir la carpeta en `HullBreach-X.Y.zip` (el .exe en la raíz del zip).
 2. `gh release create vX.Y HullBreach-X.Y.zip --title "Hull Breach X.Y" --notes-file notas.md`
 3. Los launchers leen la última Release y muestran sus notas en "Novedades".
 
 El código del launcher está en `launcher/Launcher.cs` (compila con el `csc.exe` de .NET Framework 4).
+
+### Publicar la versión de Linux
+1. Compilar para Linux x64 como `HullBreach.x86_64` y comprimir la carpeta en `HullBreach-linux.zip` (el ejecutable en la raíz).
+2. Escribir la versión en `version.txt` y subir ambos: `gh release upload linux-latest HullBreach-linux.zip version.txt --clobber` (la primera vez, `gh release create linux-latest ... --latest=false`).
